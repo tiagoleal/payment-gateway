@@ -1,0 +1,95 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
+      - DATABASE_URL=sqlite3:db/development.sqlite3
+    depends_on:
+      - selenium
+      - worker
+    stdin_open: true
+    tty: true
+    command: bash -c "bundle install && bundle exec rails tailwindcss:build && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=sqlite3:db/development.sqlite3
+    stdin_open: true
+    tty: true
+    command: bash -c "bundle install && bundle exec rails db:prepare && bundle exec rails solid_queue:start"
+
+  selenium:
+    image: selenium/standalone-chrome:4.21.0
+    platform: linux/amd64
+    ports:
+      - "4444:4444"
+      - "7900:7900" 
+    shm_size: 2gb
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    ports:
+      - "3001:3000"
+    environment:
+      - RAILS_ENV=test
+      - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
+      - DATABASE_URL=sqlite3:db/test.sqlite3
+      - APP_HOST=test
+    depends_on:
+      - selenium
+    profiles:
+      - test
+    command: bash -c "bundle install && bundle exec rails db:test:prepare && bundle exec rspec"
+
+  cucumber:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails/node_modules
+    ports:
+      - "3002:3000"
+    environment:
+      - RAILS_ENV=test
+      - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
+      - DATABASE_URL=sqlite3:db/test.sqlite3
+      - APP_HOST=cucumber
+    depends_on:
+      - selenium
+    profiles:
+      - test
+    command: bash -c "bundle install && bundle exec rails db:test:prepare && bundle exec cucumber"
+
+volumes:
+  bundle_cache:
+  node_modules:

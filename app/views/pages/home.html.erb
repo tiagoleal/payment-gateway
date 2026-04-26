@@ -1,0 +1,76 @@
+<!-- Navbar -->
+<nav class="flex items-center justify-between px-6 py-4">
+  <h1 class="text-2xl font-bold text-blue-600"><%= t('pages.home.navbar.title') %></h1>
+
+  <div class="space-x-4">
+    <%= link_to t('pages.home.navbar.login_button'),
+      new_session_path,
+      class: "bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700" %>
+  </div>
+</nav>
+
+<!-- image Section -->
+<section class="flex flex-col items-center text-center px-6 pt-20 pb-32 bg-white">
+  <h2 class="text-4xl sm:text-6xl font-extrabold text-gray-800">
+    <%= t('pages.home.hero.heading') %>
+  </h2>
+  <p class="mt-6 text-lg text-gray-600 max-w-2xl">
+    <%= t('pages.home.hero.subheading') %>
+  </p>
+
+  <div class="mt-10 space-x-4">
+    <a href="/signup"
+       class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-700">
+      <%= t('pages.home.hero.create_account_button') %>
+    </a>
+  </div>
+
+  <!-- image Illustration -->
+  <div class="mt-16 max-w-4xl">
+    <%= image_tag "payment.jpg", class: "rounded-xl shadow-xl", alt: t('pages.home.hero.image_alt') %>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="px-6 py-24 bg-gray-50">
+  <h3 class="text-3xl font-bold text-center text-gray-800"><%= t('pages.home.features.heading') %></h3>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-14 max-w-6xl mx-auto">
+
+    <div class="bg-white p-8 rounded-xl shadow text-center">
+      <div class="p-4 bg-blue-100 text-blue-600 rounded-full inline-block mb-4">
+        💳
+      </div>
+      <h4 class="text-xl font-semibold mb-2"><%= t('pages.home.features.online_payments.title') %></h4>
+      <p class="text-gray-600">
+        <%= t('pages.home.features.online_payments.description') %>
+      </p>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow text-center">
+      <div class="p-4 bg-green-100 text-green-600 rounded-full inline-block mb-4">
+        🔐
+      </div>
+      <h4 class="text-xl font-semibold mb-2"><%= t('pages.home.features.total_security.title') %></h4>
+      <p class="text-gray-600">
+        <%= t('pages.home.features.total_security.description') %>
+      </p>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow text-center">
+      <div class="p-4 bg-purple-100 text-purple-600 rounded-full inline-block mb-4">
+        📈
+      </div>
+      <h4 class="text-xl font-semibold mb-2"><%= t('pages.home.features.smart_dashboard.title') %></h4>
+      <p class="text-gray-600">
+        <%= t('pages.home.features.smart_dashboard.description') %>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-10 text-center text-gray-500 text-sm">
+  © <%= Date.today.year %> <%= t('pages.home.footer.copyright_text') %>
+</footer>

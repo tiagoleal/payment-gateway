@@ -1,0 +1,35 @@
+@startuml billing-system-c2
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+
+title Container Diagram - Multi-Payment Billing System
+
+Person(user, "System User", "Administrator responsible for managing clients and viewing reports")
+
+System_Boundary(billing_system, "Billing System") {
+    Container(web_app, "Web Application", "Ruby on Rails 8.0.4, Hotwire, Tailwind CSS", "Provides a responsive web interface for client management, reports, and user authentication")
+
+    Container(background_worker, "Background Worker", "Solid Queue", "Processes billing jobs asynchronously, executes scheduled charges, and performs automatic retry on failure")
+
+    ContainerDb(database, "Database", "SQLite 3", "Stores client, user, billing record, and session data")
+
+    Container(queue_system, "Queue System", "Solid Queue", "Manages job queues, recurring task scheduling, and asynchronous processing")
+
+    Container(cache_system, "Cache System", "Solid Cache", "Cache system for performance optimization")
+}
+
+System_Ext(email_system, "Email System", "Email sending service")
+System_Ext(payment_gateway, "Payment Gateway", "External payment processing")
+
+Rel(user, web_app, "Accesses system via browser", "HTTPS")
+Rel(web_app, database, "Reads and writes data", "SQL")
+Rel(web_app, queue_system, "Enqueues billing jobs", "API")
+Rel(web_app, cache_system, "Reads and writes cache", "API")
+Rel(background_worker, queue_system, "Consumes enqueued jobs", "Polling")
+Rel(background_worker, database, "Updates billing status", "SQL")
+Rel(background_worker, payment_gateway, "Executes charges", "API")
+Rel(web_app, email_system, "Sends emails", "SMTP")
+
+@enduml

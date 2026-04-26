@@ -1,0 +1,10 @@
+<h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl dark:text-white mb-4"><%= t('.title') %></h1>
+
+<%= render "form", client: @client %>
+
+<br>
+
+<div class="flex items-center space-x-4">
+  <%= link_to t('clients.shared.show_client'), @client, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+  <%= link_to t('clients.shared.back_to_clients'), clients_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+</div>

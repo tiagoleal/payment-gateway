@@ -1,0 +1,56 @@
+@startuml billing-system-c3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+
+title Component Diagram - Web Application
+
+Container_Boundary(web_app, "Web Application") {
+    Component(clients_controller, "Clients Controller", "Rails Controller", "Manages client CRUD with payment method selection and due day")
+
+    Component(billing_reports_controller, "Billing Reports Controller", "Rails Controller", "Provides dashboard with billed and pending clients, period filters")
+
+    Component(sessions_controller, "Sessions Controller", "Rails Controller", "Manages user authentication (login/logout)")
+
+    Component(users_controller, "Users Controller", "Rails Controller", "Manages user registration and password recovery")
+
+    Component(client_model, "Client Model", "ActiveRecord Model", "Represents client with name, due_day (1-31), payment_method_identifier")
+
+    Component(billing_record_model, "Billing Record Model", "ActiveRecord Model", "Records charges with client_id, billed_at, year_month (YYYY-MM), payment_method_identifier, status")
+
+    Component(user_model, "User Model", "ActiveRecord Model", "Represents user with email, password_digest (bcrypt)")
+
+    Component(billing_report_service, "Billing Report Service", "Service Object", "Generates reports of billed and pending clients")
+
+    Component(payment_strategies, "Payment Strategies", "Strategy Pattern", "Set of payment strategies (Base, Boleto, Credit Card) following Open/Closed Principle")
+
+    Component(scheduler_job, "Billing::SchedulerJob", "Solid Queue Job", "Recurring job that runs daily, finds clients with due date today, and enqueues charges")
+
+    Component(charge_client_job, "Billing::ChargeClientJob", "Solid Queue Job", "Processes individual charge, checks duplication, selects strategy, executes charge with retry (3x)")
+}
+
+ContainerDb(database, "Database", "SQLite 3", "Stores data")
+Container(queue_system, "Queue System", "Solid Queue", "Manages queues")
+System_Ext(payment_gateway, "Payment Gateway", "External processing")
+
+Rel(clients_controller, client_model, "Uses for CRUD")
+Rel(billing_reports_controller, billing_report_service, "Uses to generate reports")
+Rel(sessions_controller, user_model, "Authenticates user")
+Rel(users_controller, user_model, "Manages registration")
+
+Rel(billing_report_service, client_model, "Queries clients")
+Rel(billing_report_service, billing_record_model, "Queries billing records")
+
+Rel(client_model, database, "Persists data", "SQL")
+Rel(billing_record_model, database, "Persists data", "SQL")
+Rel(user_model, database, "Persists data", "SQL")
+
+Rel(scheduler_job, client_model, "Finds clients by due_day")
+Rel(scheduler_job, queue_system, "Enqueues ChargeClientJob")
+Rel(charge_client_job, client_model, "Gets client data")
+Rel(charge_client_job, billing_record_model, "Checks duplication and creates record")
+Rel(charge_client_job, payment_strategies, "Selects and executes strategy")
+Rel(payment_strategies, payment_gateway, "Processes payment")
+
+@enduml

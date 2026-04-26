@@ -1,0 +1,20 @@
+@startuml billing-system-c1
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title System Context Diagram - Multi-Payment Billing System
+
+Person(user, "System User", "Administrator responsible for managing clients and viewing billing reports")
+
+System(billing_system, "Billing System", "Automated billing system with support for multiple payment methods using the Strategy Pattern. Processes monthly charges, manages clients, and generates reports.")
+
+System_Ext(email_system, "Email System", "External service for sending emails for password recovery and notifications")
+
+System_Ext(payment_gateway, "Payment Gateway", "External payment processing systems (Boleto, Credit Card, PIX - simulated)")
+
+Rel(user, billing_system, "Manages clients, views reports, and configures payment methods", "HTTPS")
+Rel(billing_system, email_system, "Sends password recovery emails", "SMTP")
+Rel(billing_system, payment_gateway, "Processes charges through different payment strategies", "API")
+
+@enduml

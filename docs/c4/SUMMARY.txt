@@ -1,0 +1,194 @@
+================================================================================
+C4 ARCHITECTURE DIAGRAMS - BILLING SYSTEM
+================================================================================
+
+Generated: 2025-12-13
+Location: /home/tleal/Downloads/teste-ruby-tiago/docs/c4
+
+================================================================================
+FILES CREATED (7 total)
+================================================================================
+
+PlantUML Diagrams (4):
+  1. billing-system-c1.puml (1.2K) - System Context
+  2. billing-system-c2.puml (1.8K) - Containers
+  3. billing-system-c3.puml (3.1K) - Components
+  4. billing-system-c4.puml (3.2K) - Code (Strategy Pattern)
+
+Documentation (3):
+  5. README.md (5.0K) - Usage guide
+  6. INDEX.md (10K) - Navigation index
+  7. ARCHITECTURE_OVERVIEW.md (11K) - Detailed architecture analysis
+
+================================================================================
+DIAGRAM LEVELS
+================================================================================
+
+
+C1 - SYSTEM CONTEXT
+  Purpose: High-level view of the system
+  Elements: Users, Main System, External Systems
+  Focus: Business context and external interactions
+  
+  Key Elements:
+  - System User
+  - Billing System
+  - Email System (external)
+  - Payment Gateway (external)
+
+C2 - CONTAINERS
+  Purpose: Main applications and services
+  Elements: Web App, Worker, Database, Queue, Cache
+  Focus: Deployment architecture and runtime components
+  
+  Key Containers:
+  - Web Application (Rails 8.0.4 + Hotwire + Tailwind)
+  - Background Worker (Solid Queue)
+  - Database (SQLite 3)
+  - Queue System (Solid Queue)
+  - Cache System (Solid Cache)
+
+C3 - COMPONENTS
+  Purpose: Internal components of Web Application
+  Elements: Controllers, Models, Services, Jobs
+  Focus: Code organization and component interactions
+  
+  Key Components:
+  - Controllers: Clients, BillingReports, Sessions, Users
+  - Models: Client, BillingRecord, User
+  - Services: BillingReportService, PaymentStrategies
+  - Jobs: Billing::SchedulerJob, Billing::ChargeClientJob
+
+C4 - CODE
+  Purpose: Strategy Pattern implementation
+  Elements: Base Strategy, Concrete Strategies
+  Focus: Code-level design patterns
+  
+  Key Classes:
+  - PaymentStrategies::Base (abstract)
+  - PaymentStrategies::BoletoStrategy
+  - PaymentStrategies::CreditCardStrategy
+  - PaymentStrategies::PixStrategy (future)
+
+================================================================================
+KEY ARCHITECTURAL DECISIONS
+================================================================================
+
+1. STRATEGY PATTERN (Open/Closed Principle)
+   - Allows adding new payment methods without modifying existing code
+   - Dynamic strategy discovery via reflection
+   - Polymorphic execution of charges
+   
+2. SOLID QUEUE (Background Jobs)
+   - Zero external dependencies (no Redis)
+   - Built-in recurring jobs
+   - Automatic retry (3x, 10min interval)
+   
+3. BILLING GUARANTEES
+   - No duplicate charges in same month
+   - Automatic retry on failures
+   - Isolated job execution (one client failure doesn't affect others)
+
+================================================================================
+
+LANGUAGE USAGE
+================================================================================
+
+Descriptive Text: ENGLISH
+Technical Terms: ENGLISH (Service, Container, Component, Strategy, Job, Queue)
+
+Examples:
+  ✓ "Billing System" (English)
+  ✓ "Strategy Pattern" (English)
+  ✓ "Manages client CRUD" (English)
+  ✓ "Background Worker" (English)
+
+================================================================================
+HOW TO VIEW DIAGRAMS
+================================================================================
+
+VS Code (Recommended):
+  1. Install "PlantUML" extension
+  2. Open .puml file
+  3. Press Alt+D
+
+Online:
+  1. Visit http://www.plantuml.com/plantuml/uml/
+  2. Paste .puml content
+  3. View rendered diagram
+
+Docker:
+  docker run --rm -v $(pwd):/data plantuml/plantuml billing-system-c1.puml
+
+Local CLI:
+  plantuml billing-system-c1.puml
+
+================================================================================
+TECHNOLOGIES DOCUMENTED
+================================================================================
+
+Backend:
+  - Ruby 3.2.1
+  - Rails 8.0.4
+  - SQLite 3
+  - Solid Queue
+  - Solid Cache
+  - Solid Cable
+
+Frontend:
+  - Hotwire (Turbo + Stimulus)
+  - Tailwind CSS
+  - Importmap
+
+Testing:
+  - RSpec (100% coverage)
+  - Cucumber (BDD)
+  - Capybara (System tests)
+  - Selenium
+
+DevOps:
+  - Docker
+  - Docker Compose
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+For New Developers:
+  1. Read INDEX.md for navigation guide
+  2. View diagrams in order (C1 → C2 → C3 → C4)
+  3. Read ARCHITECTURE_OVERVIEW.md for detailed analysis
+  4. Explore code following diagram flow
+
+For Architects:
+  1. Review architectural decisions in ARCHITECTURE_OVERVIEW.md
+  2. Validate diagrams match current codebase
+  3. Update diagrams as system evolves
+
+For Stakeholders:
+  1. Start with C1 for business context
+  2. Read executive summary in ARCHITECTURE_OVERVIEW.md
+  3. Focus on system guarantees and extensibility
+
+================================================================================
+VALIDATION STATUS
+================================================================================
+
+✓ All 4 PlantUML diagrams created
+✓ All diagrams use proper C4-PlantUML syntax
+✓ Portuguese text with proper accents
+✓ English technical terms
+✓ Comprehensive documentation included
+✓ Navigation index provided
+✓ Architecture analysis complete
+
+================================================================================
+REFERENCES
+================================================================================
+
+C4 Model: https://c4model.com/
+PlantUML: https://plantuml.com/
+C4-PlantUML: https://github.com/plantuml-stdlib/C4-PlantUML
+Strategy Pattern: https://refactoring.guru/design-patterns/strategy
+
+================================================================================

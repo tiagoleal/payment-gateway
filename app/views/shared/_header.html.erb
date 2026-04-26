@@ -1,0 +1,54 @@
+  <nav class="relative bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <header class="relative flex h-16 items-center justify-between">
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex shrink-0 items-center">
+            <%= link_to dashboard_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-2" do %>
+              <img
+                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                alt="Your Company"
+                class="h-7 w-auto"
+              />
+            <% end %>
+          </div>
+          <div class="hidden sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+               <%= link_to t('navbar.clients'), clients_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white" %>
+               <%= link_to t('navbar.billing_reports'),  billing_reports_index_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white" %>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <nav class="flex items-center gap-4">
+            <%= render "shared/locale_switcher" %>
+          </nav>
+        
+          <!-- User profile dropdown -->
+          <div class="relative group">
+            <div class="flex items-center cursor-pointer">
+              <span class="hidden md:block text-gray-300 mr-3">Hello, <%= user.name %></span>
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10" />
+            </div>
+
+            <!-- Dropdown -->
+            <div class="absolute right-0 mt-3 bg-white shadow-md rounded-lg w-40
+                        opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                        transition-all">
+               <%= button_to t("auth.logout"),
+                  session_path,
+                  method: :delete,
+                  class: "w-full text-left px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 text-red-600 hover:bg-red-50"
+                %>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <el-disclosure id="mobile-menu" hidden class="block sm:hidden">
+      <div class="space-y-1 px-2 pt-2 pb-3">
+        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"><%= t('navbar.clients') %></a>
+        <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"><%= t('navbar.billing_reports') %></a>
+      </div>
+    </el-disclosure>
+  </nav>

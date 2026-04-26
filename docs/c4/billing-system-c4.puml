@@ -1,0 +1,71 @@
+@startuml billing-system-c4
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+
+
+title Code Diagram - Strategy Pattern for Payment Methods
+
+AddElementTag("strategy", $bgColor="#87CEEB")
+AddElementTag("concrete", $bgColor="#90EE90")
+
+Container_Boundary(payment_strategies_package, "Payment Strategies Package") {
+    Component(base_strategy, "PaymentStrategies::Base", "Abstract Strategy Class", "Abstract base class that defines the charge(client) interface and strategies() method for dynamic discovery of available strategies", $tags="strategy")
+
+    Component(boleto_strategy, "PaymentStrategies::BoletoStrategy", "Concrete Strategy", "Concrete implementation for Boleto billing. Generates a fake barcode and returns success/message", $tags="concrete")
+
+    Component(credit_card_strategy, "PaymentStrategies::CreditCardStrategy", "Concrete Strategy", "Concrete implementation for Credit Card billing. Simulates card debit and returns success/message", $tags="concrete")
+
+    Component(pix_strategy, "PaymentStrategies::PixStrategy", "Concrete Strategy (Future)", "Extensibility example: new PIX strategy can be added without modifying existing code", $tags="concrete")
+}
+
+Component(charge_client_job, "Billing::ChargeClientJob", "Background Job", "Job that processes individual client billing")
+
+Component(client, "Client Model", "ActiveRecord", "Client model with payment_method_identifier")
+
+System_Ext(payment_gateway, "Payment Gateway", "External processing system")
+
+Rel(base_strategy, base_strategy, "strategies() returns hash of all inheriting strategies", "Reflection")
+Rel(boleto_strategy, base_strategy, "Inherits and implements charge(client)")
+Rel(credit_card_strategy, base_strategy, "Inherits and implements charge(client)")
+Rel(pix_strategy, base_strategy, "Inherits and implements charge(client)")
+
+Rel(charge_client_job, client, "Gets payment_method_identifier")
+Rel(charge_client_job, base_strategy, "Calls strategies()[identifier]")
+Rel(charge_client_job, boleto_strategy, "Executes charge(client)", "Polymorphism")
+Rel(charge_client_job, credit_card_strategy, "Executes charge(client)", "Polymorphism")
+
+Rel(boleto_strategy, payment_gateway, "Processes boleto")
+Rel(credit_card_strategy, payment_gateway, "Processes card")
+Rel(pix_strategy, payment_gateway, "Processes PIX")
+
+note right of base_strategy
+  **Open/Closed Principle**
+
+  The system is open for extension
+  (new strategies) but closed for
+  modification (existing code does
+  not need to change).
+
+  **How to add a new strategy:**
+  1. Create a new class inheriting Base
+  2. Implement the charge(client) method
+  3. Return {success: bool, message: string}
+
+  No changes to existing code
+  are necessary!
+end note
+
+note bottom of charge_client_job
+  **Execution Flow:**
+
+  1. Receives client_id as parameter
+  2. Checks if already billed in the month (year_month)
+  3. Gets client's payment_method_identifier
+  4. Finds strategy: Base.strategies()[identifier]
+  5. Executes: strategy.charge(client)
+  6. Creates BillingRecord with result
+  7. On error: retry 3x (10 min interval)
+end note
+
+@enduml

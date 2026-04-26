@@ -1,0 +1,24 @@
+<div class="bg-white shadow-md rounded-lg p-6">
+  <div class="p-4">
+    <div class="mb-4">
+      <p class="text-sm font-medium text-gray-500"><%= Client.human_attribute_name(:name) %></p>
+      <p class="mt-1 text-lg text-gray-900"><%= @client.name %></p>
+    </div>
+    <div class="mb-4">
+      <p class="text-sm font-medium text-gray-500"><%= Client.human_attribute_name(:due_day) %></p>
+      <p class="mt-1 text-lg text-gray-900"><%= @client.due_day %></p>
+    </div>
+    <div class="mb-4">
+      <p class="text-sm font-medium text-gray-500"><%= Client.human_attribute_name(:payment_method_identifier) %></p>
+      <p class="mt-1 text-lg text-gray-900"><%= @client.payment_method_identifier %></p>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3 flex justify-between items-center">
+  <div>
+    <%= link_to t('.edit_client'), edit_client_path(@client), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 mr-2" %>
+    <%= link_to t('.back_to_clients'), clients_path, class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+  <%= button_to t('.destroy_client'), @client, method: :delete, class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500", data: { confirm: t('.confirm_destroy') } %>
+</div>

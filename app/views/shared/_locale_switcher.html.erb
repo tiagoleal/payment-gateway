@@ -1,0 +1,25 @@
+<div x-data="{ open: false }" class="relative">
+  <button
+    @click="open = !open"
+    class="flex items-center gap-1 px-3 py-2 rounded-md  dark:hover:bg-gray-800 text-gray-300"
+  >
+    <span><%= I18n.locale == :en ? "🇺🇸" : "🇧🇷" %></span>
+    <span class="font-semibold"><%= I18n.locale.to_s.upcase %></span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </button>
+
+  <!-- Dropdown -->
+  <div
+    x-show="open"
+    @click.away="open = false"
+    class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1"
+  >
+    <%= link_to "🇺🇸 English", url_for(locale: :en),
+      class: "block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800" %>
+
+    <%= link_to "🇧🇷 Português", url_for(locale: :'pt'),
+      class: "block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800" %>
+  </div>
+</div>

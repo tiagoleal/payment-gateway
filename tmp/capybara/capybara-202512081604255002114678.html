@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="turbo-visit-control" content="reload">
+  <title>Action Controller: Exception caught</title>
+  <style>
+    body {
+      background-color: #FAFAFA;
+      color: #333;
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+      margin: 0px;
+    }
+
+    body, p, ol, ul, td {
+      font-family: helvetica, verdana, arial, sans-serif;
+      font-size:   13px;
+      line-height: 18px;
+    }
+
+    pre {
+      font-size: 11px;
+      white-space: pre-wrap;
+    }
+
+    pre.box {
+      border: 1px solid #EEE;
+      padding: 10px;
+      margin: 0px;
+      width: 958px;
+    }
+
+    header {
+      color: #F0F0F0;
+      background: #C00;
+      padding: 0.5em 1.5em;
+    }
+
+    h1 {
+      overflow-wrap: break-word;
+      margin: 0.2em 0;
+      line-height: 1.1em;
+      font-size: 2em;
+    }
+
+    h2 {
+      color: #C00;
+      line-height: 25px;
+    }
+
+    code.traces {
+      font-size: 11px;
+    }
+
+    .response-heading, .request-heading {
+      margin-top: 30px;
+    }
+
+    .exception-message {
+      padding: 8px 0;
+    }
+
+    .exception-message .message {
+      margin-bottom: 8px;
+      line-height: 25px;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #C00;
+    }
+
+    .details {
+      border: 1px solid #D0D0D0;
+      border-radius: 4px;
+      margin: 1em 0px;
+      display: block;
+      max-width: 978px;
+    }
+
+    .summary {
+      padding: 8px 15px;
+      border-bottom: 1px solid #D0D0D0;
+      display: block;
+    }
+
+    a.summary {
+      color: #F0F0F0;
+      text-decoration: none;
+      background: #C52F24;
+      border-bottom: none;
+    }
+
+    .details pre {
+      margin: 5px;
+      border: none;
+    }
+
+    #container {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 1.5em;
+    }
+
+    .source * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .source {
+      border: 1px solid #D9D9D9;
+      background: #ECECEC;
+      max-width: 978px;
+    }
+
+    .source pre {
+      padding: 10px 0px;
+      border: none;
+    }
+
+    .source .data {
+      font-size: 80%;
+      overflow: auto;
+      background-color: #FFF;
+    }
+
+    .info {
+      padding: 0.5em;
+    }
+
+    .source .data .line_numbers {
+      background-color: #ECECEC;
+      color: #555;
+      padding: 1em .5em;
+      border-right: 1px solid #DDD;
+      text-align: right;
+    }
+
+    .line {
+      padding-left: 10px;
+      white-space: pre;
+    }
+
+    .line:hover {
+      background-color: #F6F6F6;
+    }
+
+    .line.active {
+      background-color: #FCC;
+    }
+
+    .error_highlight {
+      display: inline-block;
+      background-color: #FF9;
+      text-decoration: #F00 wavy underline;
+    }
+
+    .error_highlight_tip {
+      color: #666;
+      padding: 2px 2px;
+      font-size: 10px;
+    }
+
+    .button_to {
+      display: inline-block;
+      margin-top: 0.75em;
+      margin-bottom: 0.75em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .correction {
+      list-style-type: none;
+    }
+
+    input[type="submit"] {
+      color: white;
+      background-color: #C00;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 3px #F99;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 0;
+      padding: 10px 18px;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+    input[type="submit"]:focus,
+    input[type="submit"]:hover {
+      opacity: 0.8;
+    }
+    input[type="submit"]:active {
+      box-shadow: 0 2px #F99;
+      transform: translateY(1px)
+    }
+
+    a { color: #980905; }
+    a:visited { color: #666; }
+    a.trace-frames {
+      color: #666;
+      overflow-wrap: break-word;
+    }
+    a:hover, a.trace-frames.selected { color: #C00; }
+    a.summary:hover { color: #FFF; }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #222;
+        color: #ECECEC;
+      }
+
+      .details, .summary {
+        border-color: #666;
+      }
+
+      .source {
+        border-color: #555;
+        background-color: #333;
+      }
+
+      .source .data {
+        background: #444;
+      }
+
+      .source .data .line_numbers {
+        background: #333;
+        border-color: #222;
+      }
+
+      .line:hover {
+        background: #666;
+      }
+
+      .line.active {
+        background-color: #900;
+      }
+
+      .error_highlight {
+        color: #333;
+      }
+
+      input[type="submit"] {
+        box-shadow: 0 3px #800;
+      }
+      input[type="submit"]:active {
+        box-shadow: 0 2px #800;
+      }
+
+      a { color: #C00; }
+      a.trace-frames { color: #999; }
+      a:hover, a.trace-frames.selected { color: #E9382B; }
+    }
+
+      h2, p {
+    padding-left: 30px;
+  }
+
+  #route_table {
+    margin: 0;
+    border-collapse: collapse;
+    word-wrap:break-word;
+    table-layout: fixed;
+    width:100%;
+  }
+
+  #route_table thead tr {
+    border-bottom: 2px solid #ddd;
+  }
+
+  #route_table th {
+    padding-left: 30px;
+    text-align: left;
+  }
+
+  #route_table thead tr.bottom {
+    border-bottom: none;
+  }
+
+  #route_table thead tr.bottom th {
+    padding: 10px 30px;
+    line-height: 15px;
+  }
+
+  #route_table #search_container {
+    padding: 7px 30px;
+  }
+
+  #route_table thead tr th input#search {
+    -webkit-appearance: textfield;
+    width:100%;
+  }
+
+  #route_table thead th.http-verb {
+    width: 10%;
+  }
+
+  #route_table tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+
+  #route_table tbody tr:nth-child(odd) {
+    background: #f2f2f2;
+  }
+
+  #route_table tbody.exact_matches,
+  #route_table tbody.fuzzy_matches {
+    background-color: LightGoldenRodYellow;
+    border-bottom: solid 2px SlateGrey;
+  }
+
+  #route_table tbody.exact_matches tr,
+  #route_table tbody.fuzzy_matches tr {
+    background: none;
+    border-bottom: none;
+  }
+
+  #route_table td {
+    padding: 4px 30px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    #route_table tbody tr:nth-child(odd) {
+      background: #282828;
+    }
+
+    #route_table tbody.exact_matches tr,
+    #route_table tbody.fuzzy_matches tr {
+      background: DarkSlateGrey;
+    }
+  }
+
+  </style>
+
+  <script>
+    var toggle = function(id) {
+      document.getElementById(id).classList.toggle('hidden');
+      return false;
+    }
+    var show = function(id) {
+      document.getElementById(id).style.display = 'block';
+    }
+    var hide = function(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+    var toggleSessionDump = function() {
+      return toggle('session_dump');
+    }
+    var toggleEnvDump = function() {
+      return toggle('env_dump');
+    }
+  </script>
+</head>
+<body>
+
+  <header role="banner">
+  <h1>Routing Error</h1>
+</header>
+<main role="main" id="container">
+  <h2>No route matches [GET] &quot;/session&quot;</h2>
+
+  
+<p><code>Rails.root: /home/tleal/Documentos/workspace/code_challenger/ruby/rails/teste-ruby-tiago/monde_payment</code></p>
+
+<div id="traces-0">
+    <a href="#" onclick="hide(&#39;Framework-Trace-0&#39;);hide(&#39;Full-Trace-0&#39;);show(&#39;Application-Trace-0&#39;);; return false;">Application Trace</a> |
+    <a href="#" onclick="hide(&#39;Application-Trace-0&#39;);hide(&#39;Full-Trace-0&#39;);show(&#39;Framework-Trace-0&#39;);; return false;">Framework Trace</a> |
+    <a href="#" onclick="hide(&#39;Application-Trace-0&#39;);hide(&#39;Framework-Trace-0&#39;);show(&#39;Full-Trace-0&#39;);; return false;">Full Trace</a> 
+
+    <div id="Application-Trace-0" style="display: block;">
+      <code class="traces">
+      </code>
+    </div>
+    <div id="Framework-Trace-0" style="display: none;">
+      <code class="traces">
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="0" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/debug_exceptions.rb:35:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="1" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="2" href="#">
+            railties (8.0.4) lib/rails/rack/logger.rb:41:in `call_app&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="3" href="#">
+            railties (8.0.4) lib/rails/rack/logger.rb:29:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="4" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/remote_ip.rb:96:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="5" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/request_id.rb:34:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="6" href="#">
+            rack (3.2.4) lib/rack/method_override.rb:28:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="7" href="#">
+            rack (3.2.4) lib/rack/runtime.rb:24:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="8" href="#">
+            activesupport (8.0.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="9" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/executor.rb:16:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="10" href="#">
+            propshaft (1.3.1) lib/propshaft/server.rb:37:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="11" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/static.rb:27:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="12" href="#">
+            rack (3.2.4) lib/rack/sendfile.rb:131:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="13" href="#">
+            railties (8.0.4) lib/rails/engine.rb:535:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="14" href="#">
+            rack (3.2.4) lib/rack/urlmap.rb:76:in `block in call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="15" href="#">
+            rack (3.2.4) lib/rack/urlmap.rb:60:in `each&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="16" href="#">
+            rack (3.2.4) lib/rack/urlmap.rb:60:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="17" href="#">
+            rack-test (2.2.0) lib/rack/test.rb:360:in `process_request&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="18" href="#">
+            rack-test (2.2.0) lib/rack/test.rb:163:in `custom_request&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="19" href="#">
+            rack-test (2.2.0) lib/rack/test.rb:112:in `get&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="20" href="#">
+            /usr/local/rvm/rubies/ruby-3.2.1/lib/ruby/3.2.0/forwardable.rb:240:in `get&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="21" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/browser.rb:81:in `process&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="22" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/browser.rb:56:in `process_and_follow_redirects&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="23" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/browser.rb:26:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="24" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/driver.rb:46:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="25" href="#">
+            capybara (3.40.0) lib/capybara/session.rb:281:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="26" href="#">
+            capybara (3.40.0) lib/capybara/dsl.rb:52:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="27" href="#">
+            capybara (3.40.0) lib/capybara/dsl.rb:52:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="28" href="#">
+            rspec-rails (8.0.2) lib/rspec/rails/example/feature_example_group.rb:29:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="29" href="#">
+            spec/features/login_spec.rb:7:in `block (2 levels) in &lt;top (required)&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="30" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:263:in `instance_exec&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="31" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:263:in `block in run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="32" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:511:in `block in with_around_and_singleton_context_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="33" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:468:in `block in with_around_example_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="34" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:486:in `block in run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="35" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:626:in `block in run_around_example_hooks_for&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="36" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:352:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="37" href="#">
+            rspec-rails (8.0.2) lib/rspec/rails/adapters.rb:75:in `block (2 levels) in &lt;module:MinitestLifecycleAdapter&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="38" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:457:in `instance_exec&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="39" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:457:in `instance_exec&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="40" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:390:in `execute_with&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="41" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:628:in `block (2 levels) in run_around_example_hooks_for&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="42" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:352:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="43" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:629:in `run_around_example_hooks_for&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="44" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:486:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="45" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:468:in `with_around_example_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="46" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:511:in `with_around_and_singleton_context_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="47" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:259:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="48" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:653:in `block in run_examples&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="49" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:649:in `map&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="50" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:649:in `run_examples&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="51" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:614:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="52" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:121:in `block (3 levels) in run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="53" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:121:in `map&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="54" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:121:in `block (2 levels) in run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="55" href="#">
+            rspec-core (3.13.6) lib/rspec/core/configuration.rb:2097:in `with_suite_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="56" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:116:in `block in run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="57" href="#">
+            rspec-core (3.13.6) lib/rspec/core/reporter.rb:74:in `report&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="58" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:115:in `run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="59" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:89:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="60" href="#">
+            rspec-core (3.13.6) lib/rspec/core/invocations.rb:23:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="61" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:69:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="62" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:45:in `invoke&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="63" href="#">
+            rspec-core (3.13.6) exe/rspec:4:in `&lt;top (required)&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="64" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/rspec:25:in `load&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="65" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/rspec:25:in `&lt;main&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="66" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/ruby_executable_hooks:22:in `eval&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="67" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/ruby_executable_hooks:22:in `&lt;main&gt;&#39;
+          </a>
+          <br>
+      </code>
+    </div>
+    <div id="Full-Trace-0" style="display: none;">
+      <code class="traces">
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="0" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/debug_exceptions.rb:35:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="1" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="2" href="#">
+            railties (8.0.4) lib/rails/rack/logger.rb:41:in `call_app&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="3" href="#">
+            railties (8.0.4) lib/rails/rack/logger.rb:29:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="4" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/remote_ip.rb:96:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="5" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/request_id.rb:34:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="6" href="#">
+            rack (3.2.4) lib/rack/method_override.rb:28:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="7" href="#">
+            rack (3.2.4) lib/rack/runtime.rb:24:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="8" href="#">
+            activesupport (8.0.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="9" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/executor.rb:16:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="10" href="#">
+            propshaft (1.3.1) lib/propshaft/server.rb:37:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="11" href="#">
+            actionpack (8.0.4) lib/action_dispatch/middleware/static.rb:27:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="12" href="#">
+            rack (3.2.4) lib/rack/sendfile.rb:131:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="13" href="#">
+            railties (8.0.4) lib/rails/engine.rb:535:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="14" href="#">
+            rack (3.2.4) lib/rack/urlmap.rb:76:in `block in call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="15" href="#">
+            rack (3.2.4) lib/rack/urlmap.rb:60:in `each&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="16" href="#">
+            rack (3.2.4) lib/rack/urlmap.rb:60:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="17" href="#">
+            rack-test (2.2.0) lib/rack/test.rb:360:in `process_request&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="18" href="#">
+            rack-test (2.2.0) lib/rack/test.rb:163:in `custom_request&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="19" href="#">
+            rack-test (2.2.0) lib/rack/test.rb:112:in `get&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="20" href="#">
+            /usr/local/rvm/rubies/ruby-3.2.1/lib/ruby/3.2.0/forwardable.rb:240:in `get&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="21" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/browser.rb:81:in `process&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="22" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/browser.rb:56:in `process_and_follow_redirects&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="23" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/browser.rb:26:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="24" href="#">
+            capybara (3.40.0) lib/capybara/rack_test/driver.rb:46:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="25" href="#">
+            capybara (3.40.0) lib/capybara/session.rb:281:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="26" href="#">
+            capybara (3.40.0) lib/capybara/dsl.rb:52:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="27" href="#">
+            capybara (3.40.0) lib/capybara/dsl.rb:52:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="28" href="#">
+            rspec-rails (8.0.2) lib/rspec/rails/example/feature_example_group.rb:29:in `visit&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="29" href="#">
+            spec/features/login_spec.rb:7:in `block (2 levels) in &lt;top (required)&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="30" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:263:in `instance_exec&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="31" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:263:in `block in run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="32" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:511:in `block in with_around_and_singleton_context_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="33" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:468:in `block in with_around_example_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="34" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:486:in `block in run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="35" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:626:in `block in run_around_example_hooks_for&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="36" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:352:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="37" href="#">
+            rspec-rails (8.0.2) lib/rspec/rails/adapters.rb:75:in `block (2 levels) in &lt;module:MinitestLifecycleAdapter&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="38" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:457:in `instance_exec&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="39" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:457:in `instance_exec&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="40" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:390:in `execute_with&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="41" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:628:in `block (2 levels) in run_around_example_hooks_for&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="42" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:352:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="43" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:629:in `run_around_example_hooks_for&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="44" href="#">
+            rspec-core (3.13.6) lib/rspec/core/hooks.rb:486:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="45" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:468:in `with_around_example_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="46" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:511:in `with_around_and_singleton_context_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="47" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example.rb:259:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="48" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:653:in `block in run_examples&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="49" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:649:in `map&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="50" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:649:in `run_examples&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="51" href="#">
+            rspec-core (3.13.6) lib/rspec/core/example_group.rb:614:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="52" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:121:in `block (3 levels) in run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="53" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:121:in `map&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="54" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:121:in `block (2 levels) in run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="55" href="#">
+            rspec-core (3.13.6) lib/rspec/core/configuration.rb:2097:in `with_suite_hooks&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="56" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:116:in `block in run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="57" href="#">
+            rspec-core (3.13.6) lib/rspec/core/reporter.rb:74:in `report&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="58" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:115:in `run_specs&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="59" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:89:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="60" href="#">
+            rspec-core (3.13.6) lib/rspec/core/invocations.rb:23:in `call&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="61" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:69:in `run&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="62" href="#">
+            rspec-core (3.13.6) lib/rspec/core/runner.rb:45:in `invoke&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="63" href="#">
+            rspec-core (3.13.6) exe/rspec:4:in `&lt;top (required)&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="64" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/rspec:25:in `load&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="65" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/rspec:25:in `&lt;main&gt;&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="66" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/ruby_executable_hooks:22:in `eval&#39;
+          </a>
+          <br>
+          <a class="trace-frames trace-frames-0" data-exception-object-id="29560" data-frame-id="67" href="#">
+            /usr/local/rvm/gems/ruby-3.2.1/bin/ruby_executable_hooks:22:in `&lt;main&gt;&#39;
+          </a>
+          <br>
+      </code>
+    </div>
+
+  <script>
+    (function() {
+      var traceFrames = document.getElementsByClassName('trace-frames-0');
+      var selectedFrame, currentSource = document.getElementById('frame-source-0-0');
+
+      // Add click listeners for all stack frames
+      for (var i = 0; i < traceFrames.length; i++) {
+        traceFrames[i].addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = e.target;
+          var frame_id = target.dataset.frameId;
+
+          if (selectedFrame) {
+            selectedFrame.className = selectedFrame.className.replace("selected", "");
+          }
+
+          target.className += " selected";
+          selectedFrame = target;
+
+          // Change the extracted source code
+          changeSourceExtract(frame_id);
+        });
+
+        function changeSourceExtract(frame_id) {
+          var el = document.getElementById('frame-source-0-' + frame_id);
+          if (currentSource && el) {
+            currentSource.className += " hidden";
+            el.className = el.className.replace(" hidden", "");
+            currentSource = el;
+          }
+        }
+      }
+    })();
+  </script>
+</div>
+
+
+    <h2>
+      Routes
+    </h2>
+
+    <p>
+      Routes match in priority from top to bottom
+    </p>
+
+    
+<table id='route_table'>
+  <thead>
+    <tr>
+      <th>Helper
+        (<a data-route-helper="_path" title="Returns a relative path (without the http or domain)" href="#">Path</a> /
+        <a data-route-helper="_url" title="Returns an absolute URL (with the http and domain)" href="#">Url</a>)
+      </th>
+      <th class="http-verb">HTTP Verb</th>
+      <th>Path</th>
+      <th>Controller#Action</th>
+      <th>Source Location</th>
+    </tr>
+    <tr>
+      <th colspan="5" id="search_container"><input id="search" placeholder="Search" type="search" name="query[]" /></th>
+    </tr>
+  </thead>
+  <tbody class='exact_matches' id='exact_matches'>
+  </tbody>
+  <tbody class='fuzzy_matches' id='fuzzy_matches'>
+  </tbody>
+  <tbody>
+    <tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_health_check'>
+      rails_health_check<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/up(.:format)'>
+    /up(.:format)
+  </td>
+  <td>
+    <p>rails/health#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='signup'>
+      signup<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/signup(.:format)'>
+    (/:locale)/signup(.:format)
+  </td>
+  <td>
+    <p>users#new {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='dashboard'>
+      dashboard<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/dashboard(.:format)'>
+    (/:locale)/dashboard(.:format)
+  </td>
+  <td>
+    <p>pages#dashboard {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='users'>
+      users<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='(/:locale)/users(.:format)'>
+    (/:locale)/users(.:format)
+  </td>
+  <td>
+    <p>users#create {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='new_user'>
+      new_user<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/users/new(.:format)'>
+    (/:locale)/users/new(.:format)
+  </td>
+  <td>
+    <p>users#new {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='new_session'>
+      new_session<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/session/new(.:format)'>
+    (/:locale)/session/new(.:format)
+  </td>
+  <td>
+    <p>sessions#new {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='session'>
+      session<span class='helper'>_path</span>
+  </td>
+  <td>
+    DELETE
+  </td>
+  <td data-route-path='(/:locale)/session(.:format)'>
+    (/:locale)/session(.:format)
+  </td>
+  <td>
+    <p>sessions#destroy {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='(/:locale)/session(.:format)'>
+    (/:locale)/session(.:format)
+  </td>
+  <td>
+    <p>sessions#create {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='passwords'>
+      passwords<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/passwords(.:format)'>
+    (/:locale)/passwords(.:format)
+  </td>
+  <td>
+    <p>passwords#index {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='(/:locale)/passwords(.:format)'>
+    (/:locale)/passwords(.:format)
+  </td>
+  <td>
+    <p>passwords#create {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='new_password'>
+      new_password<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/passwords/new(.:format)'>
+    (/:locale)/passwords/new(.:format)
+  </td>
+  <td>
+    <p>passwords#new {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='edit_password'>
+      edit_password<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/passwords/:token/edit(.:format)'>
+    (/:locale)/passwords/:token/edit(.:format)
+  </td>
+  <td>
+    <p>passwords#edit {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='password'>
+      password<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='(/:locale)/passwords/:token(.:format)'>
+    (/:locale)/passwords/:token(.:format)
+  </td>
+  <td>
+    <p>passwords#show {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    PATCH
+  </td>
+  <td data-route-path='(/:locale)/passwords/:token(.:format)'>
+    (/:locale)/passwords/:token(.:format)
+  </td>
+  <td>
+    <p>passwords#update {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    PUT
+  </td>
+  <td data-route-path='(/:locale)/passwords/:token(.:format)'>
+    (/:locale)/passwords/:token(.:format)
+  </td>
+  <td>
+    <p>passwords#update {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    DELETE
+  </td>
+  <td data-route-path='(/:locale)/passwords/:token(.:format)'>
+    (/:locale)/passwords/:token(.:format)
+  </td>
+  <td>
+    <p>passwords#destroy {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='root'>
+      root<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/(:locale)(.:format)'>
+    /(:locale)(.:format)
+  </td>
+  <td>
+    <p>pages#home {:locale=&gt;/en|pt/}</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='turbo_recede_historical_location'>
+      turbo_recede_historical_location<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/recede_historical_location(.:format)'>
+    /recede_historical_location(.:format)
+  </td>
+  <td>
+    <p>turbo/native/navigation#recede</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='turbo_resume_historical_location'>
+      turbo_resume_historical_location<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/resume_historical_location(.:format)'>
+    /resume_historical_location(.:format)
+  </td>
+  <td>
+    <p>turbo/native/navigation#resume</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='turbo_refresh_historical_location'>
+      turbo_refresh_historical_location<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/refresh_historical_location(.:format)'>
+    /refresh_historical_location(.:format)
+  </td>
+  <td>
+    <p>turbo/native/navigation#refresh</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_postmark_inbound_emails'>
+      rails_postmark_inbound_emails<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/action_mailbox/postmark/inbound_emails(.:format)'>
+    /rails/action_mailbox/postmark/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>action_mailbox/ingresses/postmark/inbound_emails#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_relay_inbound_emails'>
+      rails_relay_inbound_emails<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/action_mailbox/relay/inbound_emails(.:format)'>
+    /rails/action_mailbox/relay/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>action_mailbox/ingresses/relay/inbound_emails#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_sendgrid_inbound_emails'>
+      rails_sendgrid_inbound_emails<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/action_mailbox/sendgrid/inbound_emails(.:format)'>
+    /rails/action_mailbox/sendgrid/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>action_mailbox/ingresses/sendgrid/inbound_emails#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_mandrill_inbound_health_check'>
+      rails_mandrill_inbound_health_check<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/action_mailbox/mandrill/inbound_emails(.:format)'>
+    /rails/action_mailbox/mandrill/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>action_mailbox/ingresses/mandrill/inbound_emails#health_check</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_mandrill_inbound_emails'>
+      rails_mandrill_inbound_emails<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/action_mailbox/mandrill/inbound_emails(.:format)'>
+    /rails/action_mailbox/mandrill/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>action_mailbox/ingresses/mandrill/inbound_emails#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_mailgun_inbound_emails'>
+      rails_mailgun_inbound_emails<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/action_mailbox/mailgun/inbound_emails/mime(.:format)'>
+    /rails/action_mailbox/mailgun/inbound_emails/mime(.:format)
+  </td>
+  <td>
+    <p>action_mailbox/ingresses/mailgun/inbound_emails#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_conductor_inbound_emails'>
+      rails_conductor_inbound_emails<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/inbound_emails(.:format)'>
+    /rails/conductor/action_mailbox/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/inbound_emails#index</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/inbound_emails(.:format)'>
+    /rails/conductor/action_mailbox/inbound_emails(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/inbound_emails#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='new_rails_conductor_inbound_email'>
+      new_rails_conductor_inbound_email<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/inbound_emails/new(.:format)'>
+    /rails/conductor/action_mailbox/inbound_emails/new(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/inbound_emails#new</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_conductor_inbound_email'>
+      rails_conductor_inbound_email<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/inbound_emails/:id(.:format)'>
+    /rails/conductor/action_mailbox/inbound_emails/:id(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/inbound_emails#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='new_rails_conductor_inbound_email_source'>
+      new_rails_conductor_inbound_email_source<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/inbound_emails/sources/new(.:format)'>
+    /rails/conductor/action_mailbox/inbound_emails/sources/new(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/inbound_emails/sources#new</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_conductor_inbound_email_sources'>
+      rails_conductor_inbound_email_sources<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/inbound_emails/sources(.:format)'>
+    /rails/conductor/action_mailbox/inbound_emails/sources(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/inbound_emails/sources#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_conductor_inbound_email_reroute'>
+      rails_conductor_inbound_email_reroute<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/:inbound_email_id/reroute(.:format)'>
+    /rails/conductor/action_mailbox/:inbound_email_id/reroute(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/reroutes#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_conductor_inbound_email_incinerate'>
+      rails_conductor_inbound_email_incinerate<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/conductor/action_mailbox/:inbound_email_id/incinerate(.:format)'>
+    /rails/conductor/action_mailbox/:inbound_email_id/incinerate(.:format)
+  </td>
+  <td>
+    <p>rails/conductor/action_mailbox/incinerates#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_service_blob'>
+      rails_service_blob<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/blobs/redirect/:signed_id/*filename(.:format)'>
+    /rails/active_storage/blobs/redirect/:signed_id/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/blobs/redirect#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_service_blob_proxy'>
+      rails_service_blob_proxy<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/blobs/proxy/:signed_id/*filename(.:format)'>
+    /rails/active_storage/blobs/proxy/:signed_id/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/blobs/proxy#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/blobs/:signed_id/*filename(.:format)'>
+    /rails/active_storage/blobs/:signed_id/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/blobs/redirect#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_blob_representation'>
+      rails_blob_representation<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/representations/redirect/:signed_blob_id/:variation_key/*filename(.:format)'>
+    /rails/active_storage/representations/redirect/:signed_blob_id/:variation_key/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/representations/redirect#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_blob_representation_proxy'>
+      rails_blob_representation_proxy<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/representations/proxy/:signed_blob_id/:variation_key/*filename(.:format)'>
+    /rails/active_storage/representations/proxy/:signed_blob_id/:variation_key/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/representations/proxy#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name=''>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format)'>
+    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/representations/redirect#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_disk_service'>
+      rails_disk_service<span class='helper'>_path</span>
+  </td>
+  <td>
+    GET
+  </td>
+  <td data-route-path='/rails/active_storage/disk/:encoded_key/*filename(.:format)'>
+    /rails/active_storage/disk/:encoded_key/*filename(.:format)
+  </td>
+  <td>
+    <p>active_storage/disk#show</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='update_rails_disk_service'>
+      update_rails_disk_service<span class='helper'>_path</span>
+  </td>
+  <td>
+    PUT
+  </td>
+  <td data-route-path='/rails/active_storage/disk/:encoded_token(.:format)'>
+    /rails/active_storage/disk/:encoded_token(.:format)
+  </td>
+  <td>
+    <p>active_storage/disk#update</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+<tr class='route_row' data-helper='path'>
+  <td data-route-name='rails_direct_uploads'>
+      rails_direct_uploads<span class='helper'>_path</span>
+  </td>
+  <td>
+    POST
+  </td>
+  <td data-route-path='/rails/active_storage/direct_uploads(.:format)'>
+    /rails/active_storage/direct_uploads(.:format)
+  </td>
+  <td>
+    <p>active_storage/direct_uploads#create</p>
+  </td>
+  <td>
+    <p></p>
+  </td>
+</tr>
+
+  </tbody>
+</table>
+
+<script>
+  // support forEach iterator on NodeList
+  NodeList.prototype.forEach = Array.prototype.forEach;
+
+  // Enables query search functionality
+  function setupMatchingRoutes() {
+    // Check if there are any matched results in a section
+    function checkNoMatch(section, trElement) {
+      if (section.children.length <= 1) {
+        section.appendChild(trElement);
+      }
+    }
+
+    // get JSON from URL and invoke callback with result
+    function getJSON(url, success) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.onload = function() {
+        if (this.status == 200)
+          success(JSON.parse(this.response));
+      };
+      xhr.send();
+    }
+
+    function delayedKeyup(input, callback) {
+      var timeout;
+      input.onkeyup = function(){
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(callback, 300);
+      }
+    }
+
+    // remove params or fragments
+    function sanitizeQuery(query) {
+      return query.replace(/[#?].*/, '');
+    }
+
+    var pathElements = document.querySelectorAll('#route_table [data-route-path]'),
+        searchElem   = document.querySelector('#search'),
+        exactSection = document.querySelector('#exact_matches'),
+        fuzzySection = document.querySelector('#fuzzy_matches');
+
+    // Remove matches when no search value is present
+    searchElem.onblur = function(e) {
+      if (searchElem.value === "") {
+        exactSection.innerHTML = "";
+        fuzzySection.innerHTML = "";
+      }
+    }
+
+    function buildTr(string) {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      th.setAttribute('colspan', 5);
+      tr.appendChild(th);
+      th.innerText = string;
+      return tr;
+    }
+
+    // On key press perform a search for matching paths
+    delayedKeyup(searchElem, function() {
+      var query = sanitizeQuery(searchElem.value),
+          defaultExactMatch = buildTr("Routes matching '" + query + "':"),
+          defaultFuzzyMatch = buildTr("Routes containing '" + query + "':"),
+          noExactMatch      = buildTr('No exact matches found'),
+          noFuzzyMatch      = buildTr('No fuzzy matches found');
+
+      if (!query)
+        return searchElem.onblur();
+
+      getJSON('/rails/info/routes?query=' + query, function(matches){
+        // Clear out results section
+        exactSection.replaceChildren(defaultExactMatch);
+        fuzzySection.replaceChildren(defaultFuzzyMatch);
+
+        // Display exact matches and fuzzy matches
+        pathElements.forEach(function(elem) {
+          var elemPath = elem.getAttribute('data-route-path');
+          if (matches['exact'].indexOf(elemPath) != -1)
+            exactSection.appendChild(elem.parentNode.cloneNode(true));
+
+          if (matches['fuzzy'].indexOf(elemPath) != -1)
+            fuzzySection.appendChild(elem.parentNode.cloneNode(true));
+        })
+
+        // Display 'No Matches' message when no matches are found
+        checkNoMatch(exactSection, noExactMatch);
+        checkNoMatch(fuzzySection, noFuzzyMatch);
+      })
+    })
+  }
+
+  // Enables functionality to toggle between `_path` and `_url` helper suffixes
+  function setupRouteToggleHelperLinks() {
+
+    // Sets content for each element
+    function setValOn(elems, val) {
+      elems.forEach(function(elem) {
+        elem.innerHTML = val;
+      });
+    }
+
+    // Sets onClick event for each element
+    function onClick(elems, func) {
+      elems.forEach(function(elem) {
+        elem.onclick = func;
+      });
+    }
+
+    var toggleLinks = document.querySelectorAll('#route_table [data-route-helper]');
+
+    onClick(toggleLinks, function(){
+      var helperTxt   = this.getAttribute("data-route-helper"),
+          helperElems = document.querySelectorAll('[data-route-name] span.helper');
+
+      setValOn(helperElems, helperTxt);
+    });
+  }
+
+  setupMatchingRoutes();
+  setupRouteToggleHelperLinks();
+
+  // Focus the search input after page has loaded
+  document.getElementById('search').focus();
+</script>
+
+
+  <h2 class="request-heading">Request</h2>
+  <p><b>Parameters</b>:</p> <pre>None</pre>
+
+<div class="details">
+  <div class="summary"><a href="#" onclick="return toggleSessionDump()">Toggle session dump</a></div>
+  <div id="session_dump" class="hidden"><pre></pre></div>
+</div>
+
+<div class="details">
+  <div class="summary"><a href="#" onclick="return toggleEnvDump()">Toggle env dump</a></div>
+  <div id="env_dump" class="hidden"><pre>ORIGINAL_SCRIPT_NAME: &quot;&quot;
+REMOTE_ADDR: &quot;127.0.0.1&quot;
+SERVER_NAME: &quot;www.example.com&quot;
+SERVER_PROTOCOL: &quot;HTTP/1.0&quot;</pre></div>
+</div>
+
+<h2 class="response-heading">Response</h2>
+<p><b>Headers</b>:</p> <pre>None</pre>
+
+</main>
+
+
+</body>
+</html>

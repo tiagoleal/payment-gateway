@@ -1,0 +1,130 @@
+pt:
+  navbar:
+    clients: "Clientes"
+    billing_reports: "Relatórios de Cobrança"
+    edit_profile: "Editar perfil"
+  payment_strategies:
+    boleto: "Boleto"
+    credit_card: "Cartão de Crédito"
+  pages:
+    home:
+      navbar:
+        title: "Monde Payment"
+        login_button: "Entrar"
+      hero:
+        heading: "Pagamentos simples. Resultados reais."
+        subheading: "Automatize cobranças, aceite pagamentos com segurança e acompanhe tudo em tempo real para impulsionar o crescimento do seu negócio."
+        create_account_button: "Criar Conta"
+        image_alt: "Painel de pagamentos online"
+      features:
+        heading: "Por que escolher a Monde Payment?"
+        online_payments:
+          title: "Pagamentos Online"
+          description: "Aceite cartões, transferências instantâneas e mais — totalmente integrado ao seu fluxo de trabalho."
+        total_security:
+          title: "Segurança Total"
+          description: "Criptografia, proteção contra fraudes e conformidade com padrões financeiros globais."
+        smart_dashboard:
+          title: "Dashboard Inteligente"
+          description: "Insights poderosos para monitorar receita, desempenho e fluxo de caixa."
+      footer:
+        copyright_text: "Monde Payment — Todos os direitos reservados."
+
+  auth:
+    title: Cadastre-se na sua conta
+    login: "Entrar"
+    logout: "Sair"
+    signup: "Cadastrar"
+    name: "Nome"
+    email_address: "E-mail"
+    password: "Senha"
+    password_confirmation: "Confirmar senha"
+    submit: "Enviar"
+    invalid_credentials: "E-mail ou senha inválvidos"
+    signout_confirm: "Tem certeza que deseja sair?"
+    signout_success: "Sessão encerrada com sucesso."
+    signup_success: "Cadastro realizado com sucesso!"
+
+  billing_reports:
+    index:
+      title: "Relatório de Status de Cobrança"
+      executed_billings_title: "Cobranças Executadas (Este Mês)"
+      pending_billings_title: "Cobranças Pendentes (Vencimento Hoje e Próximas)"
+      no_executed_billings: "Nenhuma cobrança bem-sucedida encontrada para este mês."
+      no_pending_billings: "Nenhum cliente com cobrança pendente para hoje."
+      scheduled_execution_date: "Data de Execução Agendada"
+      refresh_button: "Atualizar"
+
+  activerecord:
+    models:
+      user: "Usuário"
+      client: "Cliente"
+      billing_record: "Registro de Cobrança"
+    attributes:
+      user:
+        name: "Nome"
+        email_address: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmar senha"
+        remember_me: "Lembrar-me"
+        current_password: "Senha atual"
+        submit: "Enviar"
+      client:
+        name: "Nome"
+        due_day: "Dia de Vencimento"
+        payment_method_identifier: "Método de Pagamento"
+      billing_record:
+        payment_method_identifier: "Método de Pagamento"
+        billed_at: "Cobrado Em"
+        status: "Status"
+
+  errors:
+    messages:
+      blank: "não pode ficar em branco"
+      not_a_number: "não é um número"
+      not_an_integer: "não é um número inteiro"
+      greater_than_or_equal_to: "deve ser maior ou igual a %{count}"
+      less_than_or_equal_to: "deve ser menor ou igual a %{count}"
+    template:
+      header:
+        one: "1 erro impediu que este %{model} fosse salvo"
+        other: "%{count} erros impediram que este %{model} fosse salvo"
+
+  views:
+    pagination:
+      first: "&laquo; Primeira"
+      last: "Última &raquo;"
+      next: "Próxima &rsaquo;"
+      previous: "&lsaquo; Anterior"
+      pagination: "Paginação"
+
+  helpers:
+    submit:
+      create: "Criar %{model}"
+      update: "Atualizar %{model}"
+  time:
+    formats:
+      short: "%d/%m/%Y %H:%M"
+  date:
+    formats:
+      short: "%d/%m/%Y"
+  clients:
+    show:
+      title: "Cliente: %{client_name}"
+      edit_client: "Editar este cliente"
+      back_to_clients: "Voltar para clientes"
+      destroy_client: "Excluir este cliente"
+      confirm_destroy: "Tem certeza que deseja excluir este cliente?"
+    index:
+      title: "Clientes"
+      new_client: "Novo cliente"
+      show_client: "Ver este cliente"
+      edit_client: "Editar este cliente"
+      destroy_client: "Excluir este cliente"
+    new:
+      title: "Novo cliente"
+    shared:
+      back_to_clients: "Voltar para clientes"
+      show_client: "Ver este cliente"
+    edit:
+      title: "Editando cliente"

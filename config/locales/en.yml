@@ -1,0 +1,124 @@
+en:
+  navbar:
+    clients: "Clients"
+    billing_reports: "Billing Reports"
+    edit_profile: "Edit profile"
+  payment_strategies:
+    boleto: "Boleto"
+    credit_card: "Credit Card"
+  pages:
+    home:
+      navbar:
+        title: "Monde Payment"
+        login_button: "Login"
+      hero:
+        heading: "Simple payments. Real results."
+        subheading: "Automate billing, accept secure payments, and track everything in real time to accelerate your business growth."
+        create_account_button: "Create Account"
+        image_alt: "Online payment dashboard"
+      features:
+        heading: "Why choose Monde Payment?"
+        online_payments:
+          title: "Online Payments"
+          description: "Accept cards, instant transfers, and more — fully integrated into your workflow."
+        total_security:
+          title: "Total Security"
+          description: "Encryption, fraud protection, and compliance with global financial standards."
+        smart_dashboard:
+          title: "Smart Dashboard"
+          description: "Powerful insights to monitor revenue, performance and cash flow."
+      footer:
+        copyright_text: "Monde Payment — All rights reserved."
+
+  auth:
+    title: Sign Up to your account
+    login: "Log in"
+    logout: "Log out"
+    signup: "Sign up"
+    name: "Name"
+    email_address: "Email"
+    password: "Password"
+    password_confirmation: "Confirm password"
+    submit: "Submit"
+    invalid_credentials: "Invalid email or password"
+    signout_confirm: "Are you sure you want to leave?"
+    signout_success: "Signed out successfully."
+    signup_success: "Signed up successfully!"
+    login_success: "Logged in successfully!"
+  billing_reports:
+    index:
+      title: "Billing Status Report"
+      executed_billings_title: "Executed Billings (This Month)"
+      pending_billings_title: "Pending Billings (Due Today & Upcoming)"
+      no_executed_billings: "No successful billings found for this month."
+      no_pending_billings: "No clients pending billing for today."
+      scheduled_execution_date: "Scheduled Execution Date"
+      refresh_button: "Refresh"
+      
+  activerecord:
+    models:
+      user: "User"
+      client: "Client"
+      billing_record: "Billing Record"
+    attributes:
+      user:
+        name: "Name"
+        email_address: "Email"
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        remember_me: "Remember me"
+        current_password: "Current password"
+        submit: "Submit"
+      client:
+        name: "Name"
+        due_day: "Due Day"
+        payment_method_identifier: "Payment Method"
+      billing_record:
+        payment_method_identifier: "Payment Method"
+        billed_at: "Billed At"
+        status: "Status"
+
+  errors:
+    template:
+      header:
+        one: "1 error prohibited this %{model} from being saved"
+        other: "%{count} errors prohibited this %{model} from being saved"
+
+  views:
+    pagination:
+      first: "&laquo; First"
+      last: "Last &raquo;"
+      next: "Next &rsaquo;"
+      previous: "&lsaquo; Previous"
+      pagination: "Pagination"
+
+  helpers:
+    submit:
+      create: "Create %{model}"
+      update: "Update %{model}"
+  time:
+    formats:
+      short: "%d/%m/%Y %H:%M"
+  date:
+    formats:
+      short: "%d/%m/%Y"
+  clients:
+    show:
+      title: "Client: %{client_name}"
+      edit_client: "Edit this client"
+      back_to_clients: "Back to clients"
+      destroy_client: "Destroy this client"
+      confirm_destroy: "Are you sure you want to delete this client?"
+    index:
+      title: "Clients"
+      new_client: "New client"
+      show_client: "Show this client"
+      edit_client: "Edit this client"
+      destroy_client: "Destroy this client"
+    new:
+      title: "New client"
+    shared:
+      back_to_clients: "Back to clients"
+      show_client: "Show this client"
+    edit:
+      title: "Editing client"

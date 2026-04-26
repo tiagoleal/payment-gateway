@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "signup_form" do %>
+  <div class="notice">
+    <p>Welcome, <%= @user.email_address %>! Signup successful.</p>
+
+    <div class="space-x-4 mt-3.5">
+      <%= link_to t('pages.home.navbar.login_button'),
+        new_session_path,
+        class: "bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700" %>
+    </div>
+  </div>
+<% end %>
